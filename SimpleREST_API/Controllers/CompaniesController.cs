@@ -54,8 +54,45 @@ namespace SimpleREST_API.Controllers
 
             var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
 
+            return CreatedAtRoute("GetCompany",
+                new { companyId = companyToReturn.Id }, companyToReturn);
+        }
+
+        [HttpPut("{companyId}")]
+        public ActionResult<CompanyDto> UpdateCompany(int companyId, [FromBody]
+            CompanyForUpdatingDto company)
+        {
+            if (!_repository.CompanyExists(companyId))
+                return NotFound();
+
+            var companyEntity = _repository.GetCompany(companyId);
+
+            if (companyId != companyEntity.Id)
+                return BadRequest();
+
+            _mapper.Map(company, companyEntity);
+
+            _repository.UpdateCompany(companyEntity);
+            _repository.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
             return CreatedAtRoute("GetCompany", 
                 new { companyId = companyToReturn.Id }, companyToReturn);
+        }
+
+        [HttpDelete("{companyId}")]
+        public ActionResult DeleteCompany(int companyId)
+        {
+            if (!_repository.CompanyExists(companyId))
+                return NotFound();
+
+            var company = _repository.GetCompany(companyId);
+
+            _repository.DeleteCompany(company);
+            _repository.Save();
+
+            return Ok();
         }
     }
 }

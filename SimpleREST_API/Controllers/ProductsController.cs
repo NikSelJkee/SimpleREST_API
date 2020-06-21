@@ -62,5 +62,46 @@ namespace SimpleREST_API.Controllers
             return CreatedAtRoute("GetProduct", 
                 new { companyId = companyId, productId = productToReturn.Id }, productToReturn);
         }
+
+        [HttpPut("{productId}")]
+        public ActionResult<ProductDto> UpdateProductForCompany(int companyId,
+            int productId, [FromBody]ProductForUpdatingDto product)
+        {
+            if (!_repository.CompanyExists(companyId))
+                return NotFound();
+            if (!_repository.ProductExists(productId))
+                return NotFound();
+
+            var productEntity = _repository.GetProduct(companyId, productId);
+
+            if (productId != productEntity.Id)
+                return BadRequest();
+
+            _mapper.Map(product, productEntity);
+
+            _repository.UpdateProduct(productEntity);
+            _repository.Save();
+
+            var productToReturn = _mapper.Map<ProductDto>(productEntity);
+
+            return CreatedAtRoute("GetProduct", 
+                new { companyId = companyId, productId = productToReturn.Id }, productToReturn);
+        }
+
+        [HttpDelete("{productId}")]
+        public ActionResult DeleteProductForCompany(int companyId, int productId)
+        {
+            if (!_repository.CompanyExists(companyId))
+                return NotFound();
+            if (!_repository.ProductExists(productId))
+                return NotFound();
+
+            var product = _repository.GetProduct(companyId, productId);
+
+            _repository.DeleteProduct(product);
+            _repository.Save();
+
+            return Ok();
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace SimpleREST_API.Profiles
         {
             CreateMap<Company, CompanyDto>();
             CreateMap<CompanyForCreatingDto, Company>();
+            CreateMap<CompanyForUpdatingDto, Company>();
         }
     }
 }

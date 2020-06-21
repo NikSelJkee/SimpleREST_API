@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SimpleREST_API.Dtos
 {
-    public class ProductForCreatingDto
+    public class ProductForUpdatingDto
     {
         [Required(ErrorMessage = "Title needs to be filled in")]
         [MaxLength(100, ErrorMessage = "Title needs to be up to 100 characters")]
@@ -12,5 +15,6 @@ namespace SimpleREST_API.Dtos
         public string Description { get; set; }
         [Required(ErrorMessage = "Price needs to be filled in")]
         public decimal Price { get; set; }
+        public int CompanyId { get; set; }
     }
 }
