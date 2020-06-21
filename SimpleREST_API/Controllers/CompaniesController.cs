@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SimpleREST_API.Dtos;
 using SimpleREST_API.Entities;
 using SimpleREST_API.Services;
 using System;
@@ -13,28 +15,30 @@ namespace SimpleREST_API.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly IProductRepository _repository;
-        public CompaniesController(IProductRepository repository)
+        private readonly IMapper _mapper;
+        public CompaniesController(IProductRepository repository, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Company>> GetCompanies()
+        public ActionResult<IEnumerable<CompanyDto>> GetCompanies()
         {
             var companies = _repository.GetCompanies();
 
-            return Ok(companies);
+            return Ok(_mapper.Map<CompanyDto>(companies));
         }
 
         [HttpGet("{companyId}")]
-        public ActionResult<Company> GetCompany(int companyId)
+        public ActionResult<CompanyDto> GetCompany(int companyId)
         {
             if (!_repository.CompanyExists(companyId))
                 return NotFound();
 
             var company = _repository.GetCompany(companyId);
 
-            return Ok(company);
+            return Ok(_mapper.Map<CompanyDto>(company));
         }
     }
 }
