@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleREST_API.Dtos;
 using SimpleREST_API.Entities;
+using SimpleREST_API.Helpers;
 using SimpleREST_API.Services;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,10 @@ namespace SimpleREST_API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CompanyDto>> GetCompanies()
+        public ActionResult<IEnumerable<CompanyDto>> GetCompanies([FromQuery]
+            CompanyResourceParameters companyResourceParameters)
         {
-            var companies = _repository.GetCompanies();
+            var companies = _repository.GetCompanies(companyResourceParameters);
 
             return Ok(_mapper.Map<IEnumerable<CompanyDto>>(companies));
         }
