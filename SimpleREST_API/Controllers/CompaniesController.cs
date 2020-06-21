@@ -27,10 +27,10 @@ namespace SimpleREST_API.Controllers
         {
             var companies = _repository.GetCompanies();
 
-            return Ok(_mapper.Map<CompanyDto>(companies));
+            return Ok(_mapper.Map<IEnumerable<CompanyDto>>(companies));
         }
 
-        [HttpGet("{companyId}")]
+        [HttpGet("{companyId}", Name = "GetCompany")]
         public ActionResult<CompanyDto> GetCompany(int companyId)
         {
             if (!_repository.CompanyExists(companyId))
@@ -39,6 +39,21 @@ namespace SimpleREST_API.Controllers
             var company = _repository.GetCompany(companyId);
 
             return Ok(_mapper.Map<CompanyDto>(company));
+        }
+
+        [HttpPost]
+        public ActionResult<CompanyDto> CreateCompany([FromBody]
+            CompanyForCreatingDto company)
+        {
+            var companyEntity = _mapper.Map<Company>(company);
+
+            _repository.AddCompany(companyEntity);
+            _repository.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+            return CreatedAtRoute("GetCompany", 
+                new { companyId = companyToReturn.Id }, companyToReturn);
         }
     }
 }

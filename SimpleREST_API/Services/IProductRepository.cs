@@ -6,8 +6,8 @@ namespace SimpleREST_API.Services
     public interface IProductRepository
     {
         IEnumerable<Product> GetProducts(int companyId);
-        Product GetProduct(int productId);
-        void AddProduct(Product product);
+        Product GetProduct(int companyId, int productId);
+        void AddProduct(int companyId, Product product);
         void UpdateProduct(Product product);
         void DeleteProduct(Product product);
 

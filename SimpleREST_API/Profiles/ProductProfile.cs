@@ -9,6 +9,7 @@ namespace SimpleREST_API.Profiles
         public ProductProfile()
         {
             CreateMap<Product, ProductDto>();
+            CreateMap<ProductForCreatingDto, Product>();
         }
     }
 }

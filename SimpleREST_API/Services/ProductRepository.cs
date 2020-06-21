@@ -22,11 +22,12 @@ namespace SimpleREST_API.Services
             _db.Companies.Add(company);
         }
 
-        public void AddProduct(Product product)
+        public void AddProduct(int companyId, Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
+            product.CompanyId = companyId;
             _db.Products.Add(product);
         }
 
@@ -61,9 +62,9 @@ namespace SimpleREST_API.Services
             return _db.Companies.FirstOrDefault(c => c.Id == companyId);
         }
 
-        public Product GetProduct(int productId)
+        public Product GetProduct(int companyId, int productId)
         {
-            return _db.Products.FirstOrDefault(p => p.Id == productId);
+            return _db.Products.FirstOrDefault(p => p.CompanyId == companyId && p.Id == productId);
         }
 
         public IEnumerable<Product> GetProducts(int companyId)

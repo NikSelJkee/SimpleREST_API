@@ -27,18 +27,38 @@ namespace SimpleREST_API.Controllers
         {
             var products = _repository.GetProducts(companyId);
 
-            return Ok(_mapper.Map<ProductDto>(products));
+            return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
         }
 
-        [HttpGet("{productId}")]
-        public ActionResult<ProductDto> GetProduct(int productId)
+        [HttpGet("{productId}", Name = "GetProduct")]
+        public ActionResult<ProductDto> GetProduct(int companyId, int productId)
         {
+            if (!_repository.CompanyExists(companyId))
+                return NotFound();
             if (!_repository.ProductExists(productId))
                 return NotFound();
 
-            var product = _repository.GetProduct(productId);
+            var product = _repository.GetProduct(companyId, productId);
 
             return Ok(_mapper.Map<ProductDto>(product));
+        }
+
+        [HttpPost]
+        public ActionResult<ProductDto> CreateProductForCompany(int companyId, 
+            [FromBody]ProductForCreatingDto product)
+        {
+            if (!_repository.CompanyExists(companyId))
+                return NotFound();
+
+            var productEntity = _mapper.Map<Product>(product);
+
+            _repository.AddProduct(companyId, productEntity);
+            _repository.Save();
+
+            var productToReturn = _mapper.Map<ProductDto>(productEntity);
+
+            return CreatedAtRoute("GetProduct", 
+                new { companyId = companyId, productId = productToReturn.Id }, productToReturn);
         }
     }
 }
