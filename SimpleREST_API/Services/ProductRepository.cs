@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SimpleREST_API.Data;
+﻿using SimpleREST_API.Data;
 using SimpleREST_API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleREST_API.Services
 {
@@ -68,9 +66,9 @@ namespace SimpleREST_API.Services
             return _db.Products.FirstOrDefault(p => p.Id == productId);
         }
 
-        public IEnumerable<Product> GetProducts()
+        public IEnumerable<Product> GetProducts(int companyId)
         {
-            return _db.Products.ToList();
+            return _db.Products.Where(p => p.CompanyId == companyId).ToList();
         }
 
         public bool ProductExists(int productId)
