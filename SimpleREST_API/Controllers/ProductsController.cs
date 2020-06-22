@@ -103,5 +103,12 @@ namespace SimpleREST_API.Controllers
 
             return Ok();
         }
+
+        [HttpOptions]
+        public ActionResult ProductOptions()
+        {
+            Response.Headers.Add("Allow", "GET,POST,PUT,DELETE,OPTIONS");
+            return Ok();
+        }
     }
 }
